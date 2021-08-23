@@ -47,8 +47,12 @@ def send_tweets(trxns):
         tweet_str = f'Bear #{t["token_id"]} was purchased for {t["value"]} ETH'
         tweet_str += f' by https://opensea.io/accounts/{t["from"]} from https://opensea.io/accounts/{t["to"]}\n\n'
         tweet_str += f'https://opensea.io/assets/0xf32e1bde889ecf672ffae863721c8f7d280f853b/{t["token_id"]}'
-        status = twitter_api.PostUpdate(tweet_str)
-        print(f'Tweeted {tweet_str}')
+        try:
+            status = twitter_api.PostUpdate(tweet_str)
+            print(f'Tweeted {tweet_str}')
+        except:
+            pass
+        
 
 
 
