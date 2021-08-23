@@ -65,6 +65,7 @@ def main():
         tweeted_hashes = set()
 
     while True:
+        start_time = time.time()
         print('Getting transactions')
         trxns = get_recent_trxn()
         trxns = add_values(trxns)
@@ -76,6 +77,9 @@ def main():
 
         [tweeted_hashes.add(t['hash']) for t in trxns]
 
+        with open('tweeted_hashes.txt', 'w') as f:
+            f.write("\n".join(tweeted_hashes))
+        print(f"Loop took {time.time() - start_time}s. Sleeping...")
         time.sleep(60)
     
 
