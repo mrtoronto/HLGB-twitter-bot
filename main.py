@@ -55,7 +55,7 @@ def update_timestamp(trxns, dt_format='%Y-%m-%d %H:%M:%S'):
     return trxns
 
 def clean_trxns(trxns):
-    trxns = sorted(trxns, key=lambda x: x['timeStamp'], reverse=True)
+    trxns = sorted(trxns, key=lambda x: x['timeStamp'], reverse=False)
     trxns = [t for t in trxns if t['value']]
     return [{'timeStamp' : t['timeStamp'], 
              'hash': t['hash'],
