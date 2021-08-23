@@ -9,9 +9,8 @@ import time
 twitter_api = Api(consumer_key, consumer_secret, access_token, access_token_secret)
 
 def get_recent_trxn(max_results=10,
-                    address = "0xf32e1bdE889eCf672FFAe863721C8f7d280F853b", 
                     API_KEY = ETHER_API_KEY):
-    url = f"https://api.etherscan.io/api?module=account&action=tokennfttx&page=1&offset={max_results}&sort=desc&contractaddress={address}&apikey={API_KEY}"
+    url = f"https://api.etherscan.io/api?module=account&action=tokennfttx&page=1&offset={max_results}&sort=desc&contractaddress={contract_address}&apikey={API_KEY}"
     return json.loads(requests.get(url).text)['result']
 
 
@@ -46,10 +45,11 @@ def send_tweets(trxns):
     for t in trxns:
         tweet_str = f'Bear #{t["token_id"]} was purchased for {t["value"]} ETH'
         tweet_str += f' by https://opensea.io/accounts/{t["to"]} from https://opensea.io/accounts/{t["from"]}\n\n'
-        tweet_str += f'https://opensea.io/assets/0xf32e1bde889ecf672ffae863721c8f7d280f853b/{t["token_id"]}'
+        tweet_str += f'https://opensea.io/assets/{contract_address}/{t["token_id"]}'
         try:
             status = twitter_api.PostUpdate(tweet_str)
             print(f'Tweeted {tweet_str}')
+            time.sleep(1)
         except:
             pass
         
