@@ -42,7 +42,7 @@ def add_values(trxns):
     for trxn in trxns:
         value = get_trxn_value(trxn['hash'])
         if not value:
-            print(f'No value found in transaction for {trxn["token_id"]} at {trxn["timeStamp"]}')
+            print(f'No value found in transaction for {trxn["tokenID"]} at {trxn["timeStamp"]}')
             value = get_value_from_OS(trxn['tokenID'])
         if value:
             trxn.update({'value': value})
