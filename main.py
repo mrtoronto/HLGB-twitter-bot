@@ -31,15 +31,21 @@ def get_value_from_OS(token_id):
 
     headers = {"Accept": "application/json"}
     response = requests.request("GET", url, headers=headers, params=querystring)
-
-    return int(json.loads(response.text)['asset_events'][0]['total_price']) / 1e18
+    try:
+        value = int(json.loads(response.text)['asset_events'][0]['total_price']) / 1e18
+    except:
+        print(f'Failed to find value on Opensea for token {token_id}')
+        value = 0
+    return value
 
 def add_values(trxns):
     for trxn in trxns:
         value = get_trxn_value(trxn['hash'])
         if not value:
+            print(f'No value found in transaction for {t["token_id"]} at {t["timeStamp"]}')
             value = get_value_from_OS(trxn['tokenID'])
-        trxn.update({'value': value})
+        if value:
+            trxn.update({'value': value})
     return trxns
 
 def update_timestamp(trxns, dt_format='%Y-%m-%d %H:%M:%S'):
@@ -50,6 +56,7 @@ def update_timestamp(trxns, dt_format='%Y-%m-%d %H:%M:%S'):
 
 def clean_trxns(trxns):
     trxns = sorted(trxns, key=lambda x: x['timeStamp'], reverse=True)
+    trxns = [t for t in trxns if t['value']]
     return [{'timeStamp' : t['timeStamp'], 
              'hash': t['hash'],
              'to': t['to'], 
@@ -70,10 +77,9 @@ def send_tweets(trxns):
             print(f'Tweeted {tweet_str}')
             time.sleep(1)
         except:
-            pass
+            print(f'Failed to tweet:')
+            print(tweet_str)
         
-
-
 
 
 def main():
