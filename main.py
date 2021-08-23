@@ -38,7 +38,7 @@ def add_values(trxns):
     for trxn in trxns:
         value = get_trxn_value(trxn['hash'])
         if not value:
-            value = get_value_from_OS(trxn['token_id'])
+            value = get_value_from_OS(trxn['tokenID'])
         trxn.update({'value': value})
     return trxns
 
