@@ -19,9 +19,27 @@ def get_trxn_value(trxn_id, API_KEY = ETHER_API_KEY):
     trxn_value = int(json.loads(requests.get(url).text)['result']['value'], 16) / 1e18
     return trxn_value
 
+def get_value_from_OS(token_id):
+    url = "https://api.opensea.io/api/v1/events"
+
+    querystring = {"asset_contract_address":contract_address,
+                   "token_id":token_id,
+                   "event_type":"successful",
+                   "only_opensea":"false",
+                   "offset":"0",
+                   "limit":"1"}
+
+    headers = {"Accept": "application/json"}
+    response = requests.request("GET", url, headers=headers, params=querystring)
+
+    return int(json.loads(response.text)['asset_events'][0]['total_price']) / 1e18
+
 def add_values(trxns):
     for trxn in trxns:
-        trxn.update({'value': get_trxn_value(trxn['hash'])})
+        value = get_trxn_value(trxn['hash'])
+        if not value:
+            value = get_value_from_OS(trxn['token_id'])
+        trxn.update({'value': value})
     return trxns
 
 def update_timestamp(trxns, dt_format='%Y-%m-%d %H:%M:%S'):
