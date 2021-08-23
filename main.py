@@ -42,7 +42,7 @@ def remove_tweeted_trxn(trxns, tweeted_hashes):
     return [t for t in trxns if t['hash'] not in tweeted_hashes]
 
 def send_tweets(trxns):
-    for t in trxns[:2]:
+    for t in trxns:
         tweet_str = f'Bear #{t["token_id"]} was purchased for {t["value"]} ETH'
         tweet_str += f' by https://opensea.io/accounts/{t["from"]} from https://opensea.io/accounts/{t["to"]}\n\n'
         tweet_str += f'https://opensea.io/assets/0xf32e1bde889ecf672ffae863721c8f7d280f853b/{t["token_id"]}'
@@ -60,6 +60,7 @@ def main():
         tweeted_hashes = set()
 
     while True:
+        print('Getting transactions')
         trxns = get_recent_trxn()
         trxns = add_values(trxns)
         trxns = update_timestamp(trxns)
