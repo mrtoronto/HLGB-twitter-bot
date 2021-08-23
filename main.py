@@ -60,7 +60,7 @@ def send_tweets(trxns):
 def main():
     if os.path.exists('tweeted_hashes.txt'):
         with open('tweeted_hashes.txt', 'r') as f:
-            tweeted_hashes = f.read().split('\n')
+            tweeted_hashes = set(f.read().split('\n'))
     else:
         tweeted_hashes = set()
 
